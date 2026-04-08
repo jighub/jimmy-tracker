@@ -2,7 +2,7 @@
   "name": "Jimmy",
   "short_name": "Jimmy",
   "description": "16-week workout tracker",
-  "start_url": "./tracker.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f1117",
   "theme_color": "#0f1117",
