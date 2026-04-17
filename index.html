@@ -159,6 +159,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .progress-cell.today{box-shadow:0 0 0 2px var(--accent)}
 .progress-cell.rest-day{background:var(--surface2);border-color:var(--border);color:var(--text3)}
 .progress-cell.skipped{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.35);color:var(--accent3)}
+/* Exercise edit button */
+.ex-edit-btn{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:2px 5px;border-radius:5px;transition:.15s;line-height:1;vertical-align:middle;margin-left:4px}
+.ex-edit-btn:hover{background:var(--surface3);color:var(--accent2)}
+.ex-edit-btn.has-override{color:var(--accent2)}
+/* Edit exercise sheet fields */
+.edit-field-group{margin-bottom:14px}
+.edit-label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.edit-row{display:flex;gap:8px}
+.edit-row .edit-num{width:72px;flex-shrink:0}
 .progress-legend{display:flex;gap:16px;margin-top:8px;font-size:.7rem;color:var(--text2);flex-wrap:wrap}
 .legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:middle}
 
@@ -493,6 +502,13 @@ function resolveDay(wk, dy) {
   }
   return PROGRAM.days[dy];
 }
+// Returns the program-day index whose exercises are being shown (accounts for swap overrides)
+function effectiveDayIdx(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  if (wo.override && wo.override.mode === 'swap' && wo.override.swapDayIdx != null)
+    return wo.override.swapDayIdx;
+  return dy;
+}
 
 function countExercises(day) {
   if (!day.groups) return 0;
@@ -692,6 +708,7 @@ function renderDay(wk, dy) {
   const checks = wo.checks || {};
   const sets = wo.sets || {};
   let exIdx = 0;
+  const eDayIdx = effectiveDayIdx(wk, dy);
   const totalEx = countExercises(day);
   const doneEx = countChecked(wo);
   const pct = totalEx > 0 ? (doneEx / totalEx * 100) : 0;
@@ -716,19 +733,26 @@ function renderDay(wk, dy) {
         html += g.exercises.map(ex => {
           const idx = exIdx++;
           const checked = checks[idx];
-          const trackW = ex.trackWeight !== false && ex.sets > 0;
+          // Apply per-exercise override (name / sets / reps)
+          const exOvr = (state.exOverrides && state.exOverrides[eDayIdx] && state.exOverrides[eDayIdx][idx]) || {};
+          const exName = exOvr.name || ex.name;
+          const exSets = exOvr.sets !== undefined ? exOvr.sets : ex.sets;
+          const exReps = exOvr.reps || ex.reps;
+          const hasOvr = !!(state.exOverrides && state.exOverrides[eDayIdx] && state.exOverrides[eDayIdx][idx]);
+          const trackW = ex.trackWeight !== false && exSets > 0;
           const setData = sets[idx] || {};
           // Show rest note for standalone (non-superset) exercises that are not warmup/cooldown
-          const isStandalone = !isSuperset && !ex.isWarmup && !ex.isCooldown && ex.sets > 0;
+          const isStandalone = !isSuperset && !ex.isWarmup && !ex.isCooldown && exSets > 0;
           const restNote = isStandalone && !ex.note?.includes('rest') ? '<div class="ex-rest">Rest: 90 sec</div>' : '';
+          const editBtn = exSets > 0 ? `<button class="ex-edit-btn${hasOvr ? ' has-override' : ''}" onclick="openEditExercise(${wk},${dy},${idx})" title="Edit exercise">&#9998;</button>` : '';
           return `<div class="exercise-row">
             <div class="ex-check ${checked ? 'checked' : ''}" onclick="toggleExercise(${wk},${dy},${idx})"></div>
             <div class="ex-info">
-              <div class="ex-name">${ex.name}</div>
-              <div class="ex-detail">${ex.sets > 0 ? ex.sets + ' sets x ' + ex.reps : ex.reps}</div>
+              <div class="ex-name">${exName}${editBtn}</div>
+              <div class="ex-detail">${exSets > 0 ? exSets + ' sets x ' + exReps : exReps}</div>
               ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
               ${restNote}
-              ${trackW ? `<div class="ex-sets">${Array.from({length: ex.sets}, (_, s) => {
+              ${trackW ? `<div class="ex-sets">${Array.from({length: exSets}, (_, s) => {
                 const sv = setData[s] || {};
                 // Look up last week's set for ghost placeholder
                 const prev = isSwapped ? null : getPrevWeekSet(wk, dy, idx, s);
@@ -1142,6 +1166,83 @@ function closeCustomize() {
   const s = document.getElementById('customizeSheet');
   if (s) s.remove();
 }
+
+// ── Per-exercise editing ──
+function openEditExercise(wk, dy, exIdx) {
+  const eDayIdx = effectiveDayIdx(wk, dy);
+  const day = resolveDay(wk, dy);
+  if (!day.groups) return;
+  let idx = 0, foundEx = null;
+  for (const g of day.groups) {
+    for (const ex of g.exercises) {
+      if (idx === exIdx) { foundEx = ex; break; }
+      idx++;
+    }
+    if (foundEx) break;
+  }
+  if (!foundEx) return;
+
+  const exOvr = (state.exOverrides && state.exOverrides[eDayIdx] && state.exOverrides[eDayIdx][exIdx]) || {};
+  const curName = exOvr.name || foundEx.name;
+  const curSets = exOvr.sets !== undefined ? exOvr.sets : foundEx.sets;
+  const curReps = exOvr.reps || foundEx.reps;
+  const hasOvr = !!(state.exOverrides && state.exOverrides[eDayIdx] && state.exOverrides[eDayIdx][exIdx]);
+
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet-overlay';
+  sheet.id = 'editExSheet';
+  sheet.onclick = (e) => { if (e.target === sheet) closeEditExSheet(); };
+  sheet.innerHTML = `<div class="sheet">
+    <div class="sheet-header">
+      <div><div class="sheet-title">Edit Exercise</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:2px">Changes persist every week for this day.</div></div>
+      <button class="sheet-close" onclick="closeEditExSheet()">&times;</button>
+    </div>
+    <div class="sheet-body">
+      <div class="edit-field-group">
+        <div class="edit-label">Exercise Name</div>
+        <input class="free-input" id="eeExName" value="${curName}" placeholder="e.g. Goblet Squat">
+      </div>
+      <div class="edit-field-group">
+        <div class="edit-label">Sets &amp; Reps</div>
+        <div class="edit-row">
+          <input class="free-input edit-num" id="eeExSets" type="number" min="0" max="20" value="${curSets}" placeholder="Sets">
+          <input class="free-input" id="eeExReps" value="${curReps}" placeholder="e.g. 8-12 or 15">
+        </div>
+      </div>
+      <button class="complete-btn" style="margin-top:4px" onclick="saveExOverride(${wk},${dy},${exIdx},${eDayIdx})">Save Changes</button>
+      ${hasOvr ? `<button class="complete-btn" style="margin-top:8px;background:transparent;border:1px solid var(--accent3);color:var(--accent3)" onclick="resetExOverride(${eDayIdx},${exIdx})">&#8635; Reset to Original</button>` : ''}
+    </div>
+  </div>`;
+  document.body.appendChild(sheet);
+}
+function closeEditExSheet() {
+  const s = document.getElementById('editExSheet');
+  if (s) s.remove();
+}
+function saveExOverride(wk, dy, exIdx, eDayIdx) {
+  const name = document.getElementById('eeExName').value.trim();
+  const sets = parseInt(document.getElementById('eeExSets').value);
+  const reps = document.getElementById('eeExReps').value.trim();
+  if (!name) return;
+  if (!state.exOverrides) state.exOverrides = {};
+  if (!state.exOverrides[eDayIdx]) state.exOverrides[eDayIdx] = {};
+  state.exOverrides[eDayIdx][exIdx] = { name, sets: isNaN(sets) ? 0 : sets, reps };
+  saveState();
+  closeEditExSheet();
+  render();
+}
+function resetExOverride(eDayIdx, exIdx) {
+  if (state.exOverrides && state.exOverrides[eDayIdx]) {
+    delete state.exOverrides[eDayIdx][exIdx];
+    if (Object.keys(state.exOverrides[eDayIdx]).length === 0) delete state.exOverrides[eDayIdx];
+    if (Object.keys(state.exOverrides).length === 0) delete state.exOverrides;
+  }
+  saveState();
+  closeEditExSheet();
+  render();
+}
+
 // Archive the currently-active workout state into wo.archive[key]
 // and return the workout object so callers can load another slot.
 function archiveActive(wo, dy) {
@@ -1190,6 +1291,7 @@ function applyRestOverride(wk, dy) {
   setWorkout(wk, dy, wo);
   closeCustomize();
   render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function applyFreeBuild(wk, dy) {
   const wo = getWorkout(wk, dy);
@@ -1297,30 +1399,45 @@ function maybeAutoComplete(wk, dy) {
   if (wo.override && wo.override.mode === 'free') return;
   if (!day.groups) return;
 
-  let idx = 0, allFilled = true, hasTrackable = false;
-  outer: for (const g of day.groups) {
+  const eDayIdx = effectiveDayIdx(wk, dy);
+  if (!wo.checks) wo.checks = {};
+  let changed = false;
+  let hasTrackable = false;
+  let allTrackableChecked = true;
+  let idx = 0;
+
+  for (const g of day.groups) {
     for (const ex of g.exercises) {
-      const trackW = ex.trackWeight !== false && ex.sets > 0;
+      // Apply any per-exercise override for sets count
+      const exOvr = (state.exOverrides && state.exOverrides[eDayIdx] && state.exOverrides[eDayIdx][idx]) || {};
+      const exSets = exOvr.sets !== undefined ? exOvr.sets : ex.sets;
+      const trackW = ex.trackWeight !== false && exSets > 0;
+
       if (trackW) {
         hasTrackable = true;
-        for (let s = 0; s < ex.sets; s++) {
-          const sv = (wo.sets && wo.sets[idx] && wo.sets[idx][s]) || {};
-          if (!sv.w || !sv.r) { allFilled = false; break outer; }
+        // Auto-check this exercise if every set has both weight + reps
+        if (!wo.checks[idx]) {
+          let exFilled = true;
+          for (let s = 0; s < exSets; s++) {
+            const sv = (wo.sets && wo.sets[idx] && wo.sets[idx][s]) || {};
+            if (!sv.w || !sv.r) { exFilled = false; break; }
+          }
+          if (exFilled) { wo.checks[idx] = true; changed = true; }
         }
+        if (!wo.checks[idx]) allTrackableChecked = false;
       }
       idx++;
     }
   }
 
-  if (hasTrackable && allFilled) {
-    if (!wo.checks) wo.checks = {};
-    let i = 0;
-    for (const g of day.groups) {
-      for (const ex of g.exercises) { wo.checks[i] = true; i++; }
-    }
+  if (hasTrackable && allTrackableChecked) {
     wo.completed = true;
-    setWorkout(wk, dy, wo);
+    changed = true;
     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+  }
+
+  if (changed) {
+    setWorkout(wk, dy, wo);
     render();
   }
 }
