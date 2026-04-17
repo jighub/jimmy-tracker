@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Jimmy (Python static server)",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/jimmy-serve.py"],
+      "port": 3131
+    }
+  ]
+}

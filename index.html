@@ -158,6 +158,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .progress-cell.partial{background:rgba(255,217,61,.1);border-color:var(--accent4);color:var(--accent4)}
 .progress-cell.today{box-shadow:0 0 0 2px var(--accent)}
 .progress-cell.rest-day{background:var(--surface2);border-color:var(--border);color:var(--text3)}
+.progress-cell.skipped{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.35);color:var(--accent3)}
 .progress-legend{display:flex;gap:16px;margin-top:8px;font-size:.7rem;color:var(--text2);flex-wrap:wrap}
 .legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:middle}
 
@@ -203,12 +204,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .set-input{width:60px;font-size:.85rem;padding:8px 6px}
   .set-group{gap:3px}
   .set-label{font-size:.65rem}
+  .set-field-lbl{font-size:.6rem}
   .ex-check{width:28px;height:28px}
   .timer-btn{padding:6px 14px;font-size:.75rem}
   .timer-row{padding-left:42px}
   .cardio-field input,.cardio-field select{width:100%}
   .cardio-row{gap:10px}
 }
+
+/* Customize button & sheet */
+.customize-bar{display:flex;gap:8px;padding:12px 20px;background:var(--surface2);border-top:1px solid var(--border)}
+.customize-btn{flex:1;background:var(--surface3);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:8px;font-size:.78rem;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.customize-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.override-banner{padding:8px 20px;background:rgba(255,165,0,.1);border-bottom:1px solid rgba(255,165,0,.25);font-size:.72rem;color:#ffa500;display:flex;justify-content:space-between;align-items:center}
+.override-banner button{background:transparent;border:1px solid rgba(255,165,0,.4);color:#ffa500;padding:3px 8px;border-radius:5px;font-size:.68rem;cursor:pointer}
+.override-banner button:hover{background:rgba(255,165,0,.2)}
+
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.sheet-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sheet-title{font-size:1rem;font-weight:700}
+.sheet-close{background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+.sheet-body{padding:16px 20px}
+.sheet-section{margin-bottom:18px}
+.sheet-section-title{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px;font-weight:700}
+.sheet-option{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:6px;transition:.15s}
+.sheet-option:hover{border-color:var(--accent);background:var(--surface3)}
+.sheet-option .opt-name{font-size:.88rem;font-weight:500}
+.sheet-option .opt-desc{font-size:.7rem;color:var(--text3);margin-top:2px}
+.sheet-option .opt-arrow{color:var(--accent2);font-size:.9rem}
+
+/* Ghost placeholder — same grey as normal, just shows last week's number */
+.set-input.has-prev::placeholder{color:var(--text3);opacity:.85}
+/* Typed value — teal + bold to confirm logged data */
+.set-input:not(:placeholder-shown){color:var(--accent2);font-weight:700}
+/* lbs / reps sub-labels */
+.set-field{display:flex;flex-direction:column;align-items:center;gap:1px}
+.set-field-lbl{font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.3px}
+
+/* Free build */
+.free-header{padding:14px 20px;border-bottom:1px solid var(--border)}
+.free-input{width:100%;background:var(--surface3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px;font-size:.88rem;outline:none;margin-bottom:8px;font-family:inherit}
+.free-input:focus{border-color:var(--accent)}
+.free-input.title{font-size:1rem;font-weight:600}
+.free-notes{min-height:50px;resize:vertical}
+.free-ex-list{padding:8px 20px}
+.free-ex-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.free-ex-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.free-ex-row .fe-name{flex:1;background:var(--surface3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 8px;font-size:.85rem;outline:none}
+.free-ex-row .fe-num{width:52px;background:var(--surface3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 4px;font-size:.78rem;text-align:center;outline:none}
+.fe-remove{background:transparent;border:1px solid var(--border);color:var(--accent3);border-radius:6px;padding:4px 8px;font-size:.75rem;cursor:pointer}
+.fe-remove:hover{background:var(--accent3);color:#fff;border-color:var(--accent3)}
+.fe-hint{font-size:.65rem;color:var(--text3);margin-top:2px}
+.add-ex-btn{display:block;width:calc(100% - 40px);margin:0 20px 12px;padding:10px;background:var(--surface2);border:1px dashed var(--border);color:var(--accent2);border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+.add-ex-btn:hover{border-color:var(--accent2);background:var(--surface3)}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -418,6 +468,32 @@ function dateKey(weekIdx, dayIdx) { return `w${weekIdx}d${dayIdx}`; }
 function getWorkout(wk, dy) { return state.workouts[dateKey(wk, dy)] || {}; }
 function setWorkout(wk, dy, data) { state.workouts[dateKey(wk, dy)] = data; saveState(); }
 
+// Look backward through previous weeks to find the most recent set data
+// for a given day index + exercise index. Skips weeks that were overridden.
+function getPrevWeekSet(wk, dy, exIdx, setIdx) {
+  for (let pw = wk - 1; pw >= 0; pw--) {
+    const pWo = getWorkout(pw, dy);
+    if (pWo.override) continue;
+    if (pWo.sets && pWo.sets[exIdx] && pWo.sets[exIdx][setIdx]) {
+      const s = pWo.sets[exIdx][setIdx];
+      if (s.w || s.r) return s;
+    }
+  }
+  return null;
+}
+
+// Resolve the effective day to render: handles swap and rest overrides.
+function resolveDay(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  if (wo.override) {
+    if (wo.override.mode === 'swap' && wo.override.swapDayIdx != null)
+      return PROGRAM.days[wo.override.swapDayIdx];
+    if (wo.override.mode === 'rest')
+      return { rest: true, type: 'Rest / Skipped', name: PROGRAM.days[dy].name };
+  }
+  return PROGRAM.days[dy];
+}
+
 function countExercises(day) {
   if (!day.groups) return 0;
   let n = 0;
@@ -431,16 +507,28 @@ function countChecked(wo) {
 
 // ── Rendering ──
 function render() {
+  // Cancel any running rest timer before rebuilding the DOM (prevents phantom vibrations)
+  if (activeTimer) {
+    clearInterval(activeTimer.interval);
+    activeTimer = null;
+  }
   const app = document.getElementById('app');
   const ws = getWeekStart(currentWeek);
   const we = new Date(ws); we.setDate(we.getDate() + 6);
   const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const startFmt = new Date(PROGRAM.startDate + 'T00:00:00');
 
+  const isActiveDay = (w, d) => {
+    const wo = getWorkout(w, d);
+    if (wo.override && wo.override.mode === 'rest') return false; // skipped days don't count
+    if (wo.override) return true; // swap/free overrides count as workouts
+    return !PROGRAM.days[d].rest;
+  };
+
   let totalWorkouts = 0, totalComplete = 0;
   for (let w = 0; w < PROGRAM.weeks; w++) {
     for (let d = 0; d < 7; d++) {
-      if (PROGRAM.days[d].rest) continue;
+      if (!isActiveDay(w, d)) continue;
       totalWorkouts++;
       if (getWorkout(w, d).completed) totalComplete++;
     }
@@ -448,7 +536,7 @@ function render() {
 
   let weekWorkouts = 0, weekComplete = 0;
   for (let d = 0; d < 7; d++) {
-    if (PROGRAM.days[d].rest) continue;
+    if (!isActiveDay(currentWeek, d)) continue;
     weekWorkouts++;
     if (getWorkout(currentWeek, d).completed) weekComplete++;
   }
@@ -463,7 +551,9 @@ function render() {
     if (PROGRAM.days[dow].rest) continue;
     const wkIdx = Math.floor((chk - progStart) / (7 * 864e5));
     if (wkIdx < 0 || wkIdx >= PROGRAM.weeks) break;
-    if (getWorkout(wkIdx, dow).completed) streak++;
+    const sWo = getWorkout(wkIdx, dow);
+    if (sWo.override && sWo.override.mode === 'rest') continue; // skipped days don't break streak
+    if (sWo.completed) streak++;
     else break;
   }
 
@@ -544,10 +634,40 @@ function renderWeightSection() {
 }
 
 function renderDay(wk, dy) {
-  const day = PROGRAM.days[dy];
+  const originalDay = PROGRAM.days[dy];
   const wo = getWorkout(wk, dy);
   const dayDate = new Date(getWeekStart(wk)); dayDate.setDate(dayDate.getDate() + dy);
   const dayDateStr = dayDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Handle free-build override
+  if (wo.override && wo.override.mode === 'free') {
+    return renderFreeBuildDay(wk, dy, wo, dayDateStr);
+  }
+
+  // Handle skipped / rest override
+  if (wo.override && wo.override.mode === 'rest') {
+    return `<div class="workout">
+      <div class="workout-header">
+        <div><div class="workout-title">Rest / Skipped</div><div class="workout-subtitle">${dayDateStr}</div></div>
+        <span class="workout-badge badge-rest">Skipped</span>
+      </div>
+      <div class="override-banner"><span>&#128683; ${originalDay.type} voided for this week</span><button onclick="resetOverride(${wk},${dy})">Restore</button></div>
+      <div class="rest-content">
+        <div class="icon">&#128683;</div>
+        <p>You marked this day as skipped. No worries — rest and come back stronger.</p>
+      </div>
+      ${renderCustomizeBar(wk, dy)}
+    </div>`;
+  }
+
+  // Handle swap override
+  const day = (wo.override && wo.override.mode === 'swap' && wo.override.swapDayIdx != null)
+    ? PROGRAM.days[wo.override.swapDayIdx]
+    : originalDay;
+  const isSwapped = day !== originalDay;
+  const overrideBanner = isSwapped
+    ? `<div class="override-banner"><span>Swapped from ${originalDay.type} &rarr; ${day.type}</span><button onclick="resetOverride(${wk},${dy})">Reset</button></div>`
+    : '';
 
   if (day.rest) {
     return `<div class="workout">
@@ -555,15 +675,17 @@ function renderDay(wk, dy) {
         <div><div class="workout-title">${day.type}</div><div class="workout-subtitle">${dayDateStr}</div></div>
         <span class="workout-badge ${day.badge}">${day.type}</span>
       </div>
+      ${overrideBanner}
       <div class="rest-content">
         <div class="icon">&#129702;</div>
         <p>${day.restNote}</p>
       </div>
+      ${renderCustomizeBar(wk, dy)}
     </div>`;
   }
 
   if (day.cardio) {
-    return renderCardioDay(wk, dy, day, wo, dayDateStr);
+    return renderCardioDay(wk, dy, day, wo, dayDateStr, overrideBanner);
   }
 
   // Lifting day
@@ -579,6 +701,7 @@ function renderDay(wk, dy) {
       <div><div class="workout-title">${day.type}</div><div class="workout-subtitle">${dayDateStr} &middot; ${day.label}</div></div>
       <span class="workout-badge ${day.badge}">${day.type.split(' ').pop()}</span>
     </div>
+    ${overrideBanner}
     <div class="workout-progress"><div class="workout-progress-fill" style="width:${pct}%"></div></div>
     <div class="exercise-group">
       ${day.groups.map(g => {
@@ -607,13 +730,25 @@ function renderDay(wk, dy) {
               ${restNote}
               ${trackW ? `<div class="ex-sets">${Array.from({length: ex.sets}, (_, s) => {
                 const sv = setData[s] || {};
+                // Look up last week's set for ghost placeholder
+                const prev = isSwapped ? null : getPrevWeekSet(wk, dy, idx, s);
+                const wPh = prev && prev.w ? prev.w : 'lbs';
+                const rPh = prev && prev.r ? prev.r : 'reps';
+                const wCls = prev && prev.w ? 'set-input has-prev' : 'set-input';
+                const rCls = prev && prev.r ? 'set-input has-prev' : 'set-input';
                 return `<div class="set-group">
                   <div class="set-label">Set ${s+1}</div>
                   <div class="set-pair">
-                    <input class="set-input" type="number" placeholder="lbs" value="${sv.w || ''}"
-                      onchange="updateSet(${wk},${dy},${idx},${s},'w',this.value)" onblur="flashSaved(this)">
-                    <input class="set-input" type="number" placeholder="reps" value="${sv.r || ''}"
-                      onchange="updateSet(${wk},${dy},${idx},${s},'r',this.value)" onblur="flashSaved(this)">
+                    <div class="set-field">
+                      <input class="${wCls}" type="number" placeholder="${wPh}" value="${sv.w || ''}"
+                        onchange="updateSet(${wk},${dy},${idx},${s},'w',this.value)" onblur="flashSaved(this)">
+                      <span class="set-field-lbl">lbs</span>
+                    </div>
+                    <div class="set-field">
+                      <input class="${rCls}" type="number" placeholder="${rPh}" value="${sv.r || ''}"
+                        onchange="updateSet(${wk},${dy},${idx},${s},'r',this.value)" onblur="flashSaved(this)">
+                      <span class="set-field-lbl">reps</span>
+                    </div>
                   </div>
                 </div>`;
               }).join('')}</div>` : ''}
@@ -630,10 +765,17 @@ function renderDay(wk, dy) {
     <button class="complete-btn ${wo.completed ? 'done' : ''}" id="completeBtn" onclick="toggleComplete(${wk},${dy})">
       ${wo.completed ? '&#10003; Completed' : 'Mark Complete'}
     </button>
+    ${renderCustomizeBar(wk, dy)}
   </div>`;
 }
 
-function renderCardioDay(wk, dy, day, wo, dayDateStr) {
+function renderCustomizeBar(wk, dy) {
+  return `<div class="customize-bar">
+    <button class="customize-btn" onclick="openCustomize(${wk},${dy})">&#9881; Swap / Customize Workout</button>
+  </div>`;
+}
+
+function renderCardioDay(wk, dy, day, wo, dayDateStr, overrideBanner) {
   const cd = wo.cardio || {};
   const isThursday = day.cardioType === 'thursday';
   const isZone45 = day.cardioType === 'zone45';
@@ -672,6 +814,7 @@ function renderCardioDay(wk, dy, day, wo, dayDateStr) {
       </div>
       <span class="workout-badge ${isZone45 ? 'badge-hicard' : 'badge-cardio'}">${isZone45 ? 'Zone 4-5' : 'Cardio'}</span>
     </div>
+    ${overrideBanner || ''}
     <div class="cardio-banner ${bannerClass}">${bannerText}</div>
     <div class="cardio-log">
       <div class="cardio-steps">
@@ -710,6 +853,52 @@ function renderCardioDay(wk, dy, day, wo, dayDateStr) {
     <button class="complete-btn ${wo.completed ? 'done' : ''}" id="completeBtn" onclick="toggleComplete(${wk},${dy})">
       ${wo.completed ? '&#10003; Completed' : 'Mark Complete'}
     </button>
+    ${renderCustomizeBar(wk, dy)}
+  </div>`;
+}
+
+function renderFreeBuildDay(wk, dy, wo, dayDateStr) {
+  const fb = wo.freeBuild || { title: '', notes: '', exercises: [] };
+  return `<div class="workout">
+    <div class="workout-header">
+      <div><div class="workout-title">${fb.title || 'Custom Workout'}</div><div class="workout-subtitle">${dayDateStr}</div></div>
+      <span class="workout-badge badge-legs">Custom</span>
+    </div>
+    <div class="override-banner">
+      <span>Free Build mode</span>
+      <button onclick="resetOverride(${wk},${dy})">Reset</button>
+    </div>
+    <div class="free-header">
+      <input class="free-input title" type="text" placeholder="Workout name (e.g. Outdoor Run)"
+        value="${fb.title || ''}" onchange="updateFreeBuild(${wk},${dy},'title',this.value)">
+      <textarea class="free-input free-notes" placeholder="Notes (what you did, how you felt, duration, distance...)"
+        onchange="updateFreeBuild(${wk},${dy},'notes',this.value)">${fb.notes || ''}</textarea>
+    </div>
+    <div class="free-ex-list">
+      ${(fb.exercises || []).map((ex, i) => `<div class="free-ex-item">
+        <div class="free-ex-row">
+          <input class="fe-name" type="text" placeholder="Exercise name" value="${ex.name || ''}"
+            onchange="updateFreeEx(${wk},${dy},${i},'name',this.value)">
+          <button class="fe-remove" onclick="removeFreeEx(${wk},${dy},${i})">&times;</button>
+        </div>
+        <div class="free-ex-row">
+          <input class="fe-num" type="number" placeholder="sets" value="${ex.sets || ''}"
+            onchange="updateFreeEx(${wk},${dy},${i},'sets',this.value)">
+          <span style="font-size:.72rem;color:var(--text3)">sets &times;</span>
+          <input class="fe-num" type="text" placeholder="reps" value="${ex.reps || ''}"
+            onchange="updateFreeEx(${wk},${dy},${i},'reps',this.value)">
+          <span style="font-size:.72rem;color:var(--text3)">reps</span>
+          <input class="fe-num" type="number" placeholder="lbs" value="${ex.weight || ''}"
+            onchange="updateFreeEx(${wk},${dy},${i},'weight',this.value)">
+          <span style="font-size:.72rem;color:var(--text3)">lbs</span>
+        </div>
+      </div>`).join('')}
+    </div>
+    <button class="add-ex-btn" onclick="addFreeEx(${wk},${dy})">+ Add Exercise</button>
+    <button class="complete-btn ${wo.completed ? 'done' : ''}" id="completeBtn" onclick="toggleComplete(${wk},${dy})">
+      ${wo.completed ? '&#10003; Completed' : 'Mark Complete'}
+    </button>
+    ${renderCustomizeBar(wk, dy)}
   </div>`;
 }
 
@@ -729,12 +918,19 @@ function renderProgress() {
       const isToday = cellDate.getTime() === today.getTime();
       let cls = 'progress-cell';
       if (isToday) cls += ' today';
-      if (day.rest) {
+      const wo = getWorkout(w, d);
+      const isRest = day.rest && !wo.override;
+      const isSkipped = wo.override && wo.override.mode === 'rest';
+      if (isSkipped) {
+        cls += ' skipped';
+      } else if (isRest) {
         cls += ' rest-day';
       } else {
-        const wo = getWorkout(w, d);
         if (wo.completed) cls += ' full';
-        else if (wo.checks && Object.keys(wo.checks).length > 0) cls += ' partial';
+        else if ((wo.checks && Object.keys(wo.checks).length > 0) ||
+                 (wo.sets && Object.keys(wo.sets).length > 0) ||
+                 (wo.freeBuild && wo.freeBuild.exercises && wo.freeBuild.exercises.length > 0) ||
+                 wo.cardio) cls += ' partial';
       }
       const label = d === 0 ? `W${w+1}` : '';
       html += `<div class="${cls}" title="Week ${w+1}, ${day.name}" onclick="navToCell(${w},${d})">${label}</div>`;
@@ -745,6 +941,7 @@ function renderProgress() {
       <span><span class="legend-dot" style="background:var(--green-bg);border:1px solid var(--green)"></span> Done</span>
       <span><span class="legend-dot" style="background:rgba(255,217,61,.1);border:1px solid var(--accent4)"></span> Partial</span>
       <span><span class="legend-dot" style="background:var(--surface2);border:1px solid var(--border)"></span> Rest</span>
+      <span><span class="legend-dot" style="background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.35)"></span> Skipped</span>
       <span><span class="legend-dot" style="background:var(--surface);border:1px solid var(--border)"></span> Upcoming</span>
       <span><span class="legend-dot" style="border:2px solid var(--accent);background:transparent"></span> Today</span>
     </div>
@@ -810,8 +1007,10 @@ function renderDashCompletion() {
   for (let w = 0; w < PROGRAM.weeks; w++) {
     for (let d = 0; d < 7; d++) {
       if (PROGRAM.days[d].rest) continue;
+      const wo = getWorkout(w, d);
+      if (wo.override && wo.override.mode === 'rest') continue; // skipped days excluded
       total++;
-      if (getWorkout(w, d).completed) done++;
+      if (wo.completed) done++;
     }
   }
   const pct = total > 0 ? Math.round(done / total * 100) : 0;
@@ -838,8 +1037,10 @@ function renderDashWeeklyBars() {
     let total = 0, done = 0;
     for (let d = 0; d < 7; d++) {
       if (PROGRAM.days[d].rest) continue;
+      const wo = getWorkout(w, d);
+      if (wo.override && wo.override.mode === 'rest') continue; // skipped days excluded
       total++;
-      if (getWorkout(w, d).completed) done++;
+      if (wo.completed) done++;
     }
     weeks.push({ pct: total > 0 ? Math.round(done / total * 100) : 0 });
   }
@@ -884,6 +1085,162 @@ function renderDashCardioLog() {
 
 // ── Actions ──
 function switchView(v) { activeView = v; render(); }
+
+// ── Customize / Swap / Free Build ──
+function openCustomize(wk, dy) {
+  const originalDay = PROGRAM.days[dy];
+  const wo = getWorkout(wk, dy);
+  const hasOverride = !!wo.override;
+
+  // Build swap options: all non-rest program days except the current original one
+  const swapOptions = PROGRAM.days
+    .map((d, i) => ({ d, i }))
+    .filter(x => !x.d.rest && x.i !== dy);
+
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet-overlay';
+  sheet.id = 'customizeSheet';
+  sheet.onclick = (e) => { if (e.target === sheet) closeCustomize(); };
+  sheet.innerHTML = `<div class="sheet">
+    <div class="sheet-header">
+      <div><div class="sheet-title">Customize ${originalDay.name}</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:2px">${originalDay.rest ? 'Add a workout to your rest day.' : 'Swap in a different workout, or build your own.'}</div></div>
+      <button class="sheet-close" onclick="closeCustomize()">&times;</button>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-section">
+        <div class="sheet-section-title">Swap to Another Workout</div>
+        ${swapOptions.map(x => `<div class="sheet-option" onclick="applySwap(${wk},${dy},${x.i})">
+          <div><div class="opt-name">${x.d.type}</div><div class="opt-desc">${x.d.label || ''}</div></div>
+          <span class="opt-arrow">&rarr;</span>
+        </div>`).join('')}
+      </div>
+      <div class="sheet-section">
+        <div class="sheet-section-title">Or Build Your Own</div>
+        <div class="sheet-option" onclick="applyFreeBuild(${wk},${dy})">
+          <div><div class="opt-name">Free Workout</div><div class="opt-desc">Add your own exercises or log an off-plan session</div></div>
+          <span class="opt-arrow">+</span>
+        </div>
+      </div>
+      ${!originalDay.rest ? `<div class="sheet-section">
+        <div class="sheet-section-title">Missed This Day?</div>
+        <div class="sheet-option" style="border-color:rgba(255,107,107,.25)" onclick="applyRestOverride(${wk},${dy})">
+          <div><div class="opt-name" style="color:var(--accent3)">Mark as Skipped / Rest</div><div class="opt-desc">Void this workout — shows as skipped in your progress grid</div></div>
+          <span class="opt-arrow" style="color:var(--accent3)">&#128683;</span>
+        </div>
+      </div>` : ''}
+      ${hasOverride ? `<div class="sheet-section">
+        <div class="sheet-option" style="border-color:rgba(255,107,107,.3)" onclick="resetOverride(${wk},${dy});closeCustomize()">
+          <div><div class="opt-name" style="color:var(--accent3)">Reset to Original</div><div class="opt-desc">Restore ${originalDay.type}</div></div>
+        </div>
+      </div>` : ''}
+    </div>
+  </div>`;
+  document.body.appendChild(sheet);
+}
+function closeCustomize() {
+  const s = document.getElementById('customizeSheet');
+  if (s) s.remove();
+}
+// Archive the currently-active workout state into wo.archive[key]
+// and return the workout object so callers can load another slot.
+function archiveActive(wo, dy) {
+  // Rest overrides hold no workout data — archiving would overwrite the real slot with empty data
+  if (wo.override && wo.override.mode === 'rest') return;
+  const key = wo.override && wo.override.mode === 'swap' ? String(wo.override.swapDayIdx) :
+              wo.override && wo.override.mode === 'free' ? 'free' :
+              String(dy);
+  if (!wo.archive) wo.archive = {};
+  wo.archive[key] = {
+    checks: wo.checks, sets: wo.sets, cardio: wo.cardio, completed: wo.completed,
+    freeBuild: wo.freeBuild
+  };
+}
+function loadFromArchive(wo, key) {
+  const a = (wo.archive && wo.archive[key]) || {};
+  wo.checks = a.checks;
+  wo.sets = a.sets;
+  wo.cardio = a.cardio;
+  wo.completed = a.completed || false;
+  wo.freeBuild = a.freeBuild;
+  if (!wo.checks) delete wo.checks;
+  if (!wo.sets) delete wo.sets;
+  if (!wo.cardio) delete wo.cardio;
+  if (!wo.completed) delete wo.completed;
+  if (!wo.freeBuild) delete wo.freeBuild;
+}
+
+function applySwap(wk, dy, swapIdx) {
+  const wo = getWorkout(wk, dy);
+  archiveActive(wo, dy);
+  wo.override = { mode: 'swap', swapDayIdx: swapIdx };
+  loadFromArchive(wo, String(swapIdx));
+  setWorkout(wk, dy, wo);
+  closeCustomize();
+  render();
+}
+function applyRestOverride(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  archiveActive(wo, dy);
+  wo.override = { mode: 'rest' };
+  wo.completed = false;
+  delete wo.checks;
+  delete wo.sets;
+  delete wo.cardio;
+  setWorkout(wk, dy, wo);
+  closeCustomize();
+  render();
+}
+function applyFreeBuild(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  archiveActive(wo, dy);
+  wo.override = { mode: 'free' };
+  loadFromArchive(wo, 'free');
+  if (!wo.freeBuild) wo.freeBuild = { title: '', notes: '', exercises: [] };
+  // free-build doesn't use checks/sets/cardio
+  delete wo.checks;
+  delete wo.sets;
+  delete wo.cardio;
+  setWorkout(wk, dy, wo);
+  closeCustomize();
+  render();
+}
+function resetOverride(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  archiveActive(wo, dy);
+  delete wo.override;
+  delete wo.freeBuild;
+  loadFromArchive(wo, String(dy));
+  setWorkout(wk, dy, wo);
+  render();
+}
+function updateFreeBuild(wk, dy, field, val) {
+  const wo = getWorkout(wk, dy);
+  if (!wo.freeBuild) wo.freeBuild = { title: '', notes: '', exercises: [] };
+  wo.freeBuild[field] = val;
+  setWorkout(wk, dy, wo);
+}
+function addFreeEx(wk, dy) {
+  const wo = getWorkout(wk, dy);
+  if (!wo.freeBuild) wo.freeBuild = { title: '', notes: '', exercises: [] };
+  if (!wo.freeBuild.exercises) wo.freeBuild.exercises = [];
+  wo.freeBuild.exercises.push({ name: '', sets: '', reps: '', weight: '' });
+  setWorkout(wk, dy, wo);
+  render();
+}
+function updateFreeEx(wk, dy, idx, field, val) {
+  const wo = getWorkout(wk, dy);
+  if (!wo.freeBuild || !wo.freeBuild.exercises || !wo.freeBuild.exercises[idx]) return;
+  wo.freeBuild.exercises[idx][field] = val;
+  setWorkout(wk, dy, wo);
+}
+function removeFreeEx(wk, dy, idx) {
+  const wo = getWorkout(wk, dy);
+  if (!wo.freeBuild || !wo.freeBuild.exercises) return;
+  wo.freeBuild.exercises.splice(idx, 1);
+  setWorkout(wk, dy, wo);
+  render();
+}
 function navWeek(dir) { currentWeek = Math.max(0, Math.min(PROGRAM.weeks - 1, currentWeek + dir)); render(); }
 function selectDay(d) { currentDay = d; render(); }
 function navToCell(w, d) { currentWeek = w; currentDay = d; activeView = 'workout'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -898,9 +1255,9 @@ function toggleExercise(wk, dy, idx) {
 }
 
 function checkAllDone() {
-  const day = PROGRAM.days[currentDay];
-  if (day.rest || day.cardio) return;
+  const day = resolveDay(currentWeek, currentDay);
   const wo = getWorkout(currentWeek, currentDay);
+  if (day.rest || day.cardio || (wo.override && wo.override.mode === 'free')) return;
   if (wo.completed) return;
   const total = countExercises(day);
   const done = countChecked(wo);
@@ -927,6 +1284,45 @@ function updateSet(wk, dy, exIdx, setIdx, field, val) {
   if (!wo.sets[exIdx][setIdx]) wo.sets[exIdx][setIdx] = {};
   wo.sets[exIdx][setIdx][field] = val;
   setWorkout(wk, dy, wo);
+  maybeAutoComplete(wk, dy);
+}
+
+// When every trackable set has both weight and reps filled in,
+// automatically mark the workout complete and check all exercises.
+function maybeAutoComplete(wk, dy) {
+  const day = resolveDay(wk, dy);
+  if (day.rest || day.cardio) return;
+  const wo = getWorkout(wk, dy);
+  if (wo.completed) return;
+  if (wo.override && wo.override.mode === 'free') return;
+  if (!day.groups) return;
+
+  let idx = 0, allFilled = true, hasTrackable = false;
+  outer: for (const g of day.groups) {
+    for (const ex of g.exercises) {
+      const trackW = ex.trackWeight !== false && ex.sets > 0;
+      if (trackW) {
+        hasTrackable = true;
+        for (let s = 0; s < ex.sets; s++) {
+          const sv = (wo.sets && wo.sets[idx] && wo.sets[idx][s]) || {};
+          if (!sv.w || !sv.r) { allFilled = false; break outer; }
+        }
+      }
+      idx++;
+    }
+  }
+
+  if (hasTrackable && allFilled) {
+    if (!wo.checks) wo.checks = {};
+    let i = 0;
+    for (const g of day.groups) {
+      for (const ex of g.exercises) { wo.checks[i] = true; i++; }
+    }
+    wo.completed = true;
+    setWorkout(wk, dy, wo);
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+    render();
+  }
 }
 
 function flashSaved(el) {
@@ -1003,6 +1399,10 @@ function exportCSV() {
       const dateStr = cellDate.toISOString().split('T')[0];
       const dateFmt = cellDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       const bw = (state.weights || []).find(e => e.date === dateFmt);
+      if (wo.override && wo.override.mode === 'rest') {
+        rows.push([dateStr, day.name, 'Skipped', 'No', '-', '-', '-', '-', '-', '-', bw ? bw.value : ''].join(','));
+        continue;
+      }
       if (day.rest) {
         rows.push([dateStr, day.name, 'Rest', '-', '-', '-', '-', '-', '-', '-', bw ? bw.value : ''].join(','));
         continue;
